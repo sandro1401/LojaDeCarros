@@ -17,5 +17,6 @@ namespace LojaDeCarros.Data
         public DbSet<LojaDeCarros.Models.Cliente> Cliente { get; set; } = default!;
         public DbSet<LojaDeCarros.Models.Seller> Seller { get; set; } = default!;
         public DbSet<LojaDeCarros.Models.Carro> Carro { get; set; } = default!;
+        public DbSet<LojaDeCarros.Models.Nota> Nota { get; set; } = default!;
     }
 }
