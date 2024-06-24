@@ -4,6 +4,7 @@ using LojaDeCarros.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LojaDeCarros.Migrations
 {
     [DbContext(typeof(LojaDeCarrosContext))]
-    partial class LojaDeCarrosContextModelSnapshot : ModelSnapshot
+    [Migration("20240618184431_Cliente-model")]
+    partial class Clientemodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,8 +36,9 @@ namespace LojaDeCarros.Migrations
                     b.Property<int>("AnoFabricacao")
                         .HasColumnType("int");
 
-                    b.Property<int>("AnoModelo")
-                        .HasColumnType("int");
+                    b.Property<string>("AnoModelo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Chassi")
                         .HasColumnType("int");
@@ -102,10 +106,10 @@ namespace LojaDeCarros.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CarroId")
+                    b.Property<int>("CarroID")
                         .HasColumnType("int");
 
-                    b.Property<int>("CompradorId")
+                    b.Property<int>("CompradorID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataEmissao")
@@ -126,9 +130,9 @@ namespace LojaDeCarros.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CarroId");
+                    b.HasIndex("CarroID");
 
-                    b.HasIndex("CompradorId");
+                    b.HasIndex("CompradorID");
 
                     b.HasIndex("SellerId");
 
@@ -176,19 +180,19 @@ namespace LojaDeCarros.Migrations
             modelBuilder.Entity("LojaDeCarros.Models.Nota", b =>
                 {
                     b.HasOne("LojaDeCarros.Models.Carro", "Carro")
-                        .WithMany("Notas")
-                        .HasForeignKey("CarroId")
+                        .WithMany()
+                        .HasForeignKey("CarroID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LojaDeCarros.Models.Cliente", "Comprador")
-                        .WithMany("Notas")
-                        .HasForeignKey("CompradorId")
+                        .WithMany()
+                        .HasForeignKey("CompradorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LojaDeCarros.Models.Seller", "Seller")
-                        .WithMany("Notas")
+                        .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -198,21 +202,6 @@ namespace LojaDeCarros.Migrations
                     b.Navigation("Comprador");
 
                     b.Navigation("Seller");
-                });
-
-            modelBuilder.Entity("LojaDeCarros.Models.Carro", b =>
-                {
-                    b.Navigation("Notas");
-                });
-
-            modelBuilder.Entity("LojaDeCarros.Models.Cliente", b =>
-                {
-                    b.Navigation("Notas");
-                });
-
-            modelBuilder.Entity("LojaDeCarros.Models.Seller", b =>
-                {
-                    b.Navigation("Notas");
                 });
 #pragma warning restore 612, 618
         }

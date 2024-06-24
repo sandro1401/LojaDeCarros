@@ -1,5 +1,6 @@
 ﻿@model LojaDeCarros.Models.Nota
 
+
 @{
     ViewData["Title"] = "Create";
 }
@@ -31,6 +32,21 @@
                 <label asp-for="ValorVenda" class="control-label"></label>
                 <input asp-for="ValorVenda" class="form-control" />
                 <span asp-validation-for="ValorVenda" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompradorId" class="control-label"></label>
+                <select asp-for="CompradorId" class="form-control"
+                        asp-items="ViewBag.CompradorId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="SellerId" class="control-label"></label>
+                <select asp-for="SellerId" class="form-control"
+                        asp-items="ViewBag.SellerId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CarroId" class="control-label"></label>
+                <select asp-for="CarroId" class="form-control"
+                        asp-items="ViewBag.CarroId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

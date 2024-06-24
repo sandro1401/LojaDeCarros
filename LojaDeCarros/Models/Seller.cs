@@ -11,8 +11,12 @@ namespace LojaDeCarros.Models
         public string Name { get; set; }
         public DateTime DataAdmissão { get; set; }
         public int Matricula {  get; set; }
+
         [DisplayFormat(DataFormatString = "{0:#,##0.00}")]
         public double Salary { get; set; }
+
+        public List<Nota> Notas { get; set; } = new List<Nota>();
+
 
     }
 }

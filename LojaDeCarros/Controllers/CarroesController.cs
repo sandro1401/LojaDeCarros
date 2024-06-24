@@ -22,7 +22,10 @@ namespace LojaDeCarros.Controllers
         // GET: Carroes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Carro.ToListAsync());
+            return _context.Carro != null ?
+
+                View(await _context.Carro.ToListAsync()) :
+                Problem("Entity set 'PlaySenacContext.Carro'  is null.");
         }
 
         // GET: Carroes/Details/5
@@ -54,7 +57,7 @@ namespace LojaDeCarros.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Marca,Modelo,AnoFabricacao,AnoModelo,Chassi,preco")] Carro carro)
+        public async Task<IActionResult> Create([Bind("Id,Marca,Modelo,AnoFabricacao,AnoModelo,Chassi,Preco")] Carro carro)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +89,7 @@ namespace LojaDeCarros.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Marca,Modelo,AnoFabricacao,AnoModelo,Chassi,preco")] Carro carro)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Marca,Modelo,AnoFabricacao,AnoModelo,Chassi,Preco")] Carro carro)
         {
             if (id != carro.Id)
             {

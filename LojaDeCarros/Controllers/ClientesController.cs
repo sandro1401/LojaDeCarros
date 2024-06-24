@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LojaDeCarros.Data;
 using LojaDeCarros.Models;
+using LojaDeCarros.Models.ViewModels;
+using NuGet.Protocol.Plugins;
 
 namespace LojaDeCarros.Controllers
 {
@@ -20,9 +22,13 @@ namespace LojaDeCarros.Controllers
         }
 
         // GET: Clientes
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
+
         {
-            return View(await _context.Cliente.ToListAsync());
+            var clientes = _context.Cliente.Include("Carro").ToList();
+
+
+            return View(clientes);
         }
 
         // GET: Clientes/Details/5
@@ -34,7 +40,7 @@ namespace LojaDeCarros.Controllers
             }
 
             var cliente = await _context.Cliente
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(c => c.Id == id);
             if (cliente == null)
             {
                 return NotFound();
@@ -45,8 +51,11 @@ namespace LojaDeCarros.Controllers
 
         // GET: Clientes/Create
         public IActionResult Create()
+           
         {
-            return View();
+            var viewModel = new ClienteFormViewModel();
+            viewModel.Carros = _context.Carro.ToList();
+            return View(viewModel);
         }
 
         // POST: Clientes/Create
@@ -54,31 +63,34 @@ namespace LojaDeCarros.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,BirthDate,Email,telefone,Endereco,CPF")] Cliente cliente)
+        public async Task<IActionResult> Create([Bind("Id,Name,BirthDate,Email,Telefone,Endereco,CPF, CarroId")] Cliente cliente)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(cliente);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(cliente);
-        }
-
-        // GET: Clientes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cliente = await _context.Cliente.FindAsync(id);
             if (cliente == null)
             {
                 return NotFound();
             }
-            return View(cliente);
+            _context.Add(cliente);
+            _context.SaveChanges();
+
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: Clientes/Edit/5
+        public IActionResult Edit(int? id)
+        {
+            Cliente cliente = _context.Cliente.FirstOrDefault(c=> c.Id == id);
+
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+
+            List<Carro> carros = _context.Carro.ToList();
+            ClienteFormViewModel viewModel = new ClienteFormViewModel();
+            viewModel.Carros = carros;
+            viewModel.Cliente = cliente;
+            return View(viewModel);
         }
 
         // POST: Clientes/Edit/5
@@ -86,48 +98,28 @@ namespace LojaDeCarros.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,BirthDate,Email,telefone,Endereco,CPF")] Cliente cliente)
+        public IActionResult Edit(Cliente cliente)
         {
-            if (id != cliente.Id)
+            if (cliente == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(cliente);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClienteExists(cliente.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(cliente);
+            //_context.cliente.Update(seller);
+            //Podemos chamar o update sem informar a tabela
+            _context.Update(cliente);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         // GET: Clientes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            //Busca no banco de dados o cliente com o id informado
+            Cliente cliente = _context.Cliente.Include("Carro").FirstOrDefault(c => c.Id == id);
 
-            var cliente = await _context.Cliente
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (cliente == null)
-            {
+            if (cliente == null) {
                 return NotFound();
             }
 
@@ -135,18 +127,18 @@ namespace LojaDeCarros.Controllers
         }
 
         // POST: Clientes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+       
+        public IActionResult Delete(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
-            if (cliente != null)
+           Cliente cliente = _context.Cliente.FirstOrDefault(c  => c.Id == id);
+            if (cliente == null)
             {
-                _context.Cliente.Remove(cliente);
+                return NotFound();
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            _context.Remove(cliente);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         private bool ClienteExists(int id)

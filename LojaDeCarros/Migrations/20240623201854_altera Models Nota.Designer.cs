@@ -4,6 +4,7 @@ using LojaDeCarros.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LojaDeCarros.Migrations
 {
     [DbContext(typeof(LojaDeCarrosContext))]
-    partial class LojaDeCarrosContextModelSnapshot : ModelSnapshot
+    [Migration("20240623201854_altera Models Nota")]
+    partial class alteraModelsNota
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,10 +48,15 @@ namespace LojaDeCarros.Migrations
                     b.Property<string>("Modelo")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("NotaId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Preco")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NotaId");
 
                     b.ToTable("Carro");
                 });
@@ -84,12 +92,17 @@ namespace LojaDeCarros.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<int?>("NotaId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Telefone")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CarroId");
+
+                    b.HasIndex("NotaId");
 
                     b.ToTable("Cliente");
                 });
@@ -154,12 +167,24 @@ namespace LojaDeCarros.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<int?>("NotaId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Salary")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("NotaId");
+
                     b.ToTable("Seller");
+                });
+
+            modelBuilder.Entity("LojaDeCarros.Models.Carro", b =>
+                {
+                    b.HasOne("LojaDeCarros.Models.Nota", null)
+                        .WithMany("Carros")
+                        .HasForeignKey("NotaId");
                 });
 
             modelBuilder.Entity("LojaDeCarros.Models.Cliente", b =>
@@ -170,25 +195,29 @@ namespace LojaDeCarros.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("LojaDeCarros.Models.Nota", null)
+                        .WithMany("Clientes")
+                        .HasForeignKey("NotaId");
+
                     b.Navigation("Carro");
                 });
 
             modelBuilder.Entity("LojaDeCarros.Models.Nota", b =>
                 {
                     b.HasOne("LojaDeCarros.Models.Carro", "Carro")
-                        .WithMany("Notas")
+                        .WithMany()
                         .HasForeignKey("CarroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LojaDeCarros.Models.Cliente", "Comprador")
-                        .WithMany("Notas")
+                        .WithMany()
                         .HasForeignKey("CompradorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LojaDeCarros.Models.Seller", "Seller")
-                        .WithMany("Notas")
+                        .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -200,19 +229,20 @@ namespace LojaDeCarros.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("LojaDeCarros.Models.Carro", b =>
-                {
-                    b.Navigation("Notas");
-                });
-
-            modelBuilder.Entity("LojaDeCarros.Models.Cliente", b =>
-                {
-                    b.Navigation("Notas");
-                });
-
             modelBuilder.Entity("LojaDeCarros.Models.Seller", b =>
                 {
-                    b.Navigation("Notas");
+                    b.HasOne("LojaDeCarros.Models.Nota", null)
+                        .WithMany("Sellers")
+                        .HasForeignKey("NotaId");
+                });
+
+            modelBuilder.Entity("LojaDeCarros.Models.Nota", b =>
+                {
+                    b.Navigation("Carros");
+
+                    b.Navigation("Clientes");
+
+                    b.Navigation("Sellers");
                 });
 #pragma warning restore 612, 618
         }

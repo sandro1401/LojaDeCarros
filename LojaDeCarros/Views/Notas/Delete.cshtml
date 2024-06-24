@@ -35,6 +35,24 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ValorVenda)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Comprador)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Comprador.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Seller)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Seller.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Carro)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Carro.Modelo)
+        </dd>
     </dl>
     
     <form asp-action="Delete">
