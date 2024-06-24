@@ -21,11 +21,10 @@ namespace LojaDeCarros.Controllers
 
         // GET: Carroes
         public async Task<IActionResult> Index()
-        {
-            return _context.Carro != null ?
 
-                View(await _context.Carro.ToListAsync()) :
-                Problem("Entity set 'PlaySenacContext.Carro'  is null.");
+        { var carrosContext = _context.Carro;
+            return View(await carrosContext.ToListAsync());
+              
         }
 
         // GET: Carroes/Details/5
