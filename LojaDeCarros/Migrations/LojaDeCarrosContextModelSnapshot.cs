@@ -64,11 +64,9 @@ namespace LojaDeCarros.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CPF")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CarroId")
-                        .HasColumnType("int");
+                    b.Property<string>("CPF")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -84,12 +82,11 @@ namespace LojaDeCarros.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<int>("Telefone")
-                        .HasColumnType("int");
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CarroId");
 
                     b.ToTable("Cliente");
                 });
@@ -160,17 +157,6 @@ namespace LojaDeCarros.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Seller");
-                });
-
-            modelBuilder.Entity("LojaDeCarros.Models.Cliente", b =>
-                {
-                    b.HasOne("LojaDeCarros.Models.Carro", "Carro")
-                        .WithMany()
-                        .HasForeignKey("CarroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Carro");
                 });
 
             modelBuilder.Entity("LojaDeCarros.Models.Nota", b =>

@@ -15,12 +15,10 @@ namespace LojaDeCarros.Models
         [MinLength(6, ErrorMessage = "Insira um email com mais caracteres")]
         [MaxLength(30, ErrorMessage = "Email muito lomgo")]
         public string Email { get; set; }
-        public int Telefone { get; set; }
+        public string Telefone { get; set; }
         public string Endereco { get; set; }
-        public int CPF { get; set; }
-        [Display(Name = "Veículo Adquirido")]
-        public int CarroId { get; set; }
-        public Carro Carro { get; set; }
+        public string CPF { get; set; }
+  
 
         public List<Nota> Notas { get; set; } = new List<Nota>();
 

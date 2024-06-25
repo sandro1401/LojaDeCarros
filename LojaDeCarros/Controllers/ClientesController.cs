@@ -25,7 +25,7 @@ namespace LojaDeCarros.Controllers
         public IActionResult Index()
 
         {
-            var clientes = _context.Cliente.Include("Carro").ToList();
+            var clientes = _context.Cliente.ToList();
 
 
             return View(clientes);
@@ -54,7 +54,7 @@ namespace LojaDeCarros.Controllers
            
         {
             var viewModel = new ClienteFormViewModel();
-            viewModel.Carros = _context.Carro.ToList();
+            
             return View(viewModel);
         }
 
@@ -63,7 +63,7 @@ namespace LojaDeCarros.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,BirthDate,Email,Telefone,Endereco,CPF, CarroId")] Cliente cliente)
+        public async Task<IActionResult> Create([Bind("Id,Name,BirthDate,Email,Telefone,Endereco,CPF")] Cliente cliente)
         {
             if (cliente == null)
             {
@@ -86,9 +86,9 @@ namespace LojaDeCarros.Controllers
                 return NotFound();
             }
 
-            List<Carro> carros = _context.Carro.ToList();
+          
             ClienteFormViewModel viewModel = new ClienteFormViewModel();
-            viewModel.Carros = carros;
+           
             viewModel.Cliente = cliente;
             return View(viewModel);
         }
@@ -117,7 +117,7 @@ namespace LojaDeCarros.Controllers
         public IActionResult Delete(int? id)
         {
             //Busca no banco de dados o cliente com o id informado
-            Cliente cliente = _context.Cliente.Include("Carro").FirstOrDefault(c => c.Id == id);
+            Cliente cliente = _context.Cliente.FirstOrDefault(c => c.Id == id);
 
             if (cliente == null) {
                 return NotFound();

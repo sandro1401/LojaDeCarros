@@ -23,14 +23,13 @@ namespace LojaDeCarros.Controllers
         // GET: Notas
         public  async Task<IActionResult> Index()
 
-        {
+        { 
            
-            var compradorContext = _context.Nota.Include(c => c.Comprador);
-            var sellerContext = _context.Nota.Include(s => s.Seller);
-            var carroContext = _context.Nota.Include(car => car.Carro);
-            var notasContext = _context.Nota;
             
-            return View(await notasContext.ToListAsync());
+            
+            var listaNotas = _context.Nota.Include("Comprador").Include("Seller").Include("Carro");
+
+            return View(await listaNotas.ToListAsync());
         }
 
         // GET: Notas/Details/5
